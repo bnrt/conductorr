@@ -2,7 +2,8 @@
 UserScript for multi-tracker search. 
 
 ## Installation
-Create a local html file `conductorr.html` containing the code `<!DOCTYPE html>`.
+- Install the userscript from [GreasyFork](https://greasyfork.org/en/scripts/12013-conductorr) or right from [here](https://github.com/bnrt/conductorr/raw/master/conductorr.user.js).
+- Save [conductorr.html](https://raw.githubusercontent.com/bnrt/conductorr/master/conductorr.html) locally and open it.
 
 Make sure local files are accessible from userscripts in your browser:
 - With GreaseMonkey for Firefox, open `about:config` and change `greasemonkey.fileIsGreaseable` to `true`. Although, Conductorr is not tested with GreaseMonkey 4+, it may not work.
