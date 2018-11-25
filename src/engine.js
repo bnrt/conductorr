@@ -4,7 +4,7 @@
 // @namespace   BlackNullerNS
 // @include     file:///*/btsearch.html*
 // @include     file:///*/conductorr.html*
-// @version     1.8
+// @version     1.8.1
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
