@@ -1731,61 +1731,6 @@ bt.addSource("BHD", function () {
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB5ElEQVQ4jYWTz2sTQRTH39mDqCdB8P/wVjJDsTeP4g+I6M7OFKGBXqqnYjKrp0JPUgv2oj2EzKSlWsjBQmcOi2KaQ0sDgrSyxdimdNEqKUnj8+LG7A/pg3eb7+c78+Z9ARI1kl+4kHNUnjjq1dj48jcubZNL+9ot2nu3p1fPJ8/HijJ1izD1mTKNlGmkbrUnpOkJz6LwLHLPBFyam5ninKOKA+HfHnWrJ88WNk4jQNRuyRZTzkkxZRrliw/dmh/0kwDhWXSluQMAANfuly8RplpZgLdm9/Qw7PzOAghpDtj0yjkgTLlZYso0Hv/qIiLi05eNNMCzyKXJA3H0EmUabxRWcP3jHta397G+vY+fdkOMqh12sLkTDjoCcmkqQBwVRI4R5H/1pXUcuw2Xpg5Z759XWymxbbRwcsZPzME2gDh6NQl4Mvc+Baj5QXoGnlmG3ANVSALemB1ERNxoHvRrftCP5pABEDCSL1+mTB8NA762f+K82sJRt3oipOnNLm5iO+zEf0Pa72LKXgQAAOKo8Uh893ENhVwbbGK0ypMzPs4ubv5zL5mH8W109POsVR7OwpD7XGYeiFOZIEwfDkG68TDZH6JkCmcksnyVssoUYWrtulg64tLucWnWXWke8dK7K8nzfwBqE0A4H4ujDAAAAABJRU5ErkJggg=="
     };
 });
-bt.addSource("BlueBird", function () {
-    var bird = "http://bluebird-hd.org/browse.php?incldead=1&stype=and&search={query}";
-
-    return {
-        url: {
-            all: bird,
-            movies: bird + "&c1=1&c2=1",
-            movies_1080: bird + "&c1=1&c2=1&cr3=1&cr5=1",
-            movies_720: bird + "&c1=1&c2=1&cr4=1&cr6=1",
-            movies_remux: bird + "&c1=1&c2=1&cr2=1",
-            movies_bluray: bird + "&c1=1&c2=1&cr1=1",
-            music: bird + "&cr7=1",
-            music_flac: bird + "&cr7=1",
-            tv: bird + "&c6=1",
-            mvids: bird + "&c4=1",
-            docs: bird + "&c3=1",
-            xxx: bird + "&c7=1"
-        },
-        onParse: {
-            cleanup: ["a[href*='&snatched']"],
-            row: "#highlighted > tr",
-            link_prepend: "http://bluebird-hd.org/",
-            sel: [
-                {text: "a[href*='details.php']:eq(0)"},
-                {text: "> td:eq(-3)"},
-                {text: "> td:last", link: "a[href*='download.php']:eq(0)", noblank: true}
-            ]
-        },
-        onPrepareQuery: function (context) {
-            var i,
-				len = context.url.length,
-				year = bt.extractYear(context, true);
-
-            if (year && year.length === 4) {
-                for (i = 0; i < len; i++) {
-                    context.url[i] += "&dsearch=" + year;
-                }
-            }
-
-            var res = bt.extractResolution(context);
-
-            if (res === "720p") {
-                for (i = 0; i < len; i++) {
-                    context.url[i] += "&cr4=1&cr6=1";
-                }
-            } else if (res === "1080p" || res === "1080i") {
-                for (i = 0; i < len; i++) {
-                    context.url[i] += "&cr3=1&cr5=1";
-                }
-            }
-        },
-        onFilter: bt.filter3dMovies,
-        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAC20lEQVQ4jY3IS0zTdwDA8Z+LO3gZiUumiS8ooqWlhE2lrDWxlocmUBSjpfpnUdSAAVFidOWPKxYw5VUKRmtbCxUwlgJFYbUKCOhkPoIv4pOoyWJ2miZbNEu223cHk2WLienhc/mI0OVRjM4z6D196NzBmOg9Ida5AvgHhxG6Y63kvPiT7Nn3ZD9/F6P3bHj1F2vbAojU6ib0E0/JiN4n43KMovfRjT/h29YOhLq8Ck3HEBpvmFTf4EfUngGS3f2oTn+g9gyg8Q6SFoiwqroBkbSjhG8afay0uVDIzSjkln8lVDWTYj9BeqOXNQ1e0ht9pNWfIsHaRHy1k5SSQ4jUwmKsF8ZZf8zJfEspC4vKWVhUzgKpjK+kMuqvTNE/+ytdM69w33qMPTrFns4Bkg/8gKJAQqRttnD04iT6ChmRtpa5WiNz0418ttrA5xmZeH9+yPmZl+xp97PL5aPU3Y1taIJSf4jEnE0IVbaJushP7D3RSc5BmXxrLQVyPdtsDeRUWAk+mKUlMoFYvAKhSEEkqNlwUMYxehvtFgmhysyl5sI4zePTdNx9Tt+z10R/ecvN3/+m98Es/hv3ONoTRixOYk5iCmLRcpR5Zhyjt9EX7kSk5m3FNjRJgd1J4mYJpbkYpbkYlWU38SYLS3LNxJsszDfk8uX6PBZkbUJqcmMbvsbqrUWIVduLsYbHMMgO5m00E5cvEZcv8UXeDuJMEnLfJfy3HtF69Q51w5PIAyNUha9ibu9EYSpEaL7bx66eYXTHT7GoooZllbUsq6xlaaWdpZV29g+OUT8xzfc/Xqeif4R9wSgFniCJRxwod5YhlCWHUJ/sJbmtB1X7uf9rO8cKZxcrnV0oW7tJdvWgdHWT1HIW9clevj5ch9AcOY42Ms2a8NQn3PiPD6eNTKNtOI1Ir3GS9eQPjDNvMD78LWZZz96hawsgvP0XyfT1YQiNYQiOxCY0hjEwhOPsef4BcnJ19Gval0YAAAAASUVORK5CYII="
-    };
-});
 bt.addSource("BTN", function () {
     return {
         url: {
@@ -2157,73 +2102,6 @@ bt.addSource("KG", function () {
         },
 //		onFilter: bt.requireAllWords,
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACoElEQVQ4jeWSXUiTcRjF/5PCi0F00Wpgr1t7dR84F5MitQVddDFlOpTUGiRR4cqREKTJmLA1FssKTZ2hNslkaxJTl9MYKyd+ZMtZutShJI3elabvmm2jRSpPNyaJRHTduX7Oj/NwDkL/h8Lh8B6dVtsgl8u7xsbGcv/J7PF4dspkMg+VSoX4+HhISEgAuVzu9ng8BX/zUkiS5CkUCheGYUCn04FCoYBAIFjHcRxEoqNrDoejdPNarVbHTU9Oik3t7VUqpdKWm5P7KTU1FXAcBwaDATQaDdKPpBORSIQWCoWY0Wh0XygU2o0QQmhubk6Sn5f3gcPhAJvDBhaLBUwmE5hMJmAYBomMROByuaDX643bcvb09FTIZLJZoVAIPB4P+Hw+sFgswDAMMAwDPAmH5ORkYLPZ6/Pz84e2AcRi8deUlBRIS0sDiUSyrFKpeo+JRKt8Ph8yMzPWCgsLvUqlstPn8x3v6rDUkCTJIwhC7JuaylGr1XEoKysrJpVKCYfDcTkYDO5CCCGn06kymUx3zWazESFE6evurnvS2alpa22ubze2ND1oaWoJBAIHEUII9dntOoIgkn4likQiNIPB0GW1WnUWi6WuvrbWVHzq5GdD7Z2nVou5dXRo6Nq3YHA/Qoiy5ZXFxUWqy+XasdG9TFlZOSqVZH8/V3zGv7CwcHgDvtfneyvp7bGVT3u9W3cw7naXB/z+jMGB55eqKsr788UnfjQ3NjwkSZL7p50ghBB6/MikL5NfcJ89XfClrOT8uyulJVPGe4aOaq1mcNjlkndotc77Ot0zb//AzfcTE0Xh5WV2LBZL3ARkCgWrt29ct0WXlui/41dWVg68evni6uuRkbJGjWa439ja9nF2tmjcbtfZqm+98c/MZNdcVLh+As9+Owd6H2u5AAAAAElFTkSuQmCC"
-    };
-});
-bt.addSource("MoreThanTV", function () {
-    var q = "https://www.morethan.tv/ajax.php?action=browse&order_by=time&searchsubmit=1&searchstr={query}";
-
-    return {
-        url: {
-            all: q,
-            tv: q + "&filter_cat[2]=1",
-            docs: q + "&taglist=documentary"
-        },
-        onPrepareQuery: function(context){
-            var i,
-                len = context.url.length,
-                res = bt.extractResolution(context);
-
-            if (res) {
-                for (i = 0; i < len; i++) {
-                    context.url[i] += "&encoding=" + res;
-                }
-            }
-
-            var year = bt.extractYear(context);
-
-            if (year) {
-                for (i = 0; i < len; i++) {
-                    context.url[i] += "&filelist=" + year;
-                }
-            }
-        },
-        onParse: function (response) {
-            try {
-                var data = JSON.parse(response.responseText);
-            } catch (e) {
-                bt.showFailAlert(response);
-                return null;
-            }
-
-            if (!('status' in data) || data.status !== 'success' || !('response' in data) || !('results' in data.response)) {
-                bt.showFailAlert(response, "unexpected data");
-                return null;
-            }
-
-            response.context.searchUrl = response.finalUrl.replace("ajax.php?action=browse", "torrents.php?action=basic");
-
-            return data.response.results;
-        },
-        onRender: function (torrents, table) {
-            var title, rows = "";
-
-            for (var i = 0, l = torrents.length; i < l; i++) {
-                title = '<a href="https://www.morethan.tv/torrents.php?id=' + torrents[i].groupId + '&torrentid=' + torrents[i].torrentId + '" target="_blank">' + torrents[i].groupName + '</a>';
-
-                if (torrents[i].fileCount > 1) {
-                    title += ' (' + torrents[i].fileCount + ' files)';
-                }
-
-                if (torrents[i].isFreeleech) {
-                    title += ' <span class="label label-success">Freeleech</span>';
-                }
-
-                rows += '<tr><td>' + title + '</td><td>' + torrents[i].seeders + '</td><td><a href="https://www.morethan.tv/torrents.php?action=download&id=' + torrents[i].torrentId + '">' + bt.humanizeSize(torrents[i].size) + '</a></td></tr>';
-            }
-
-            table.html(rows);
-        },
-        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABZ0lEQVQ4jcWTu0qDYQyGA4qCDuJisV/S/m8c3HTwCgQXL6CTizg4eAAPQ1EQHAV1ETxUsF/i2FVw0UEEN2/B2c0bcPgcfv9ixVMnX3iHF5KHhBAiIroImPSAbQs4MMHmZ8egGxZ0ywWHzlhxrs42yuUBIiKyERmLIVuLgh0Luu6c1XOYbhX2gG0TbEbRBRPcu2gywbMzJmi/VBrcJeqjLuSsDy6aPOC4m762TOAumixos5MsuHHR9D8AYzRcNHUaL0RENlqZes83PwEWTfDkoimH5dPEgJpzVnfR5JzV/7xCDKgVMBN9dNF0MlQZ/hOgKHTBy4d1Wu06xuV3gFbR0CzrTHv09/wroFmqqDEaxmg0SxUtcmTd+/UK3agDcETUXyPq6QrAeuuiKYqe0UUZ45Gxmn8ZVkyw/JWj6JKxzjnjKj+pvnqoTtMuUW8M2bwJ3BnnUfTsK5voqQccO+POWK89VKeJiN4AsErg8gM6/z4AAAAASUVORK5CYII="
     };
 });
 bt.addSource("MVGroup", function () {
@@ -2859,42 +2737,6 @@ bt.addSource("Traum", function () {
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAM0lEQVQ4jWPo3v7gPyWYoXv7g/9y2ZvJwoPIAGwYm2KsYYAN4DIAq+JRA0YNoKkBxCZbAF6fe55MSrHNAAAAAElFTkSuQmCC"
     };
 });
-bt.addSource("AR", function () {
-    var ar = "https://alpharatio.cc/torrents.php?action=basic&searchstr={query}";
-
-    return {
-        url: {
-            all: ar,
-            movies: ar + "&filter_cat[6]=1&filter_cat[7]=1&filter_cat[8]=1&filter_cat[9]=1",
-            movies_1080: ar + " 1080p&filter_cat[7]=1&filter_cat[9]=1",
-            movies_720: ar + " 720p&filter_cat[7]=1&filter_cat[9]=1",
-            movies_bluray: ar + " COMPLETE&filter_cat[7]=1",
-            movies_remux: ar + " REMUX&filter_cat[7]=1",
-            docs: ar + "&filter_cat[1]=1&filter_cat[2]=1&filter_cat[3]=1&filter_cat[6]=1&filter_cat[7]=1&filter_cat[24]=1",
-            tv: ar + "&filter_cat[2]=1&filter_cat[3]=1&filter_cat[5]=1",
-            mvids: ar + "&filter_cat[11]=1",
-            elearning: ar + "&filter_cat[21]=1&filter_cat[22]=1&filter_cat[24]=1",
-            ebooks: ar + "&filter_cat[21]=1",
-            abooks: ar + "&filter_cat[22]=1",
-            games_pc: ar + "&filter_cat[12]=1",
-            apps_win: ar + "&filter_cat[16]=1",
-            music: ar + "&filter_cat[23]=1",
-            music_flac: ar + " FLAC&filter_cat[23]=1",
-            xxx: ar + "&filter_cat[10]=1&filter_cat[20]=1"
-        },
-        onParse: {
-            row: "#torrent_table tr.torrent",
-            link_prepend: "https://alpharatio.cc/",
-            sel: [
-                {text: ".group_info > a:eq(0)"},
-                {text: "> td:eq(7)"},
-                {text: "> td:eq(5)", link: "a[href*='action=download']:eq(0)", noblank: true}
-            ]
-        },
-		onFilter: bt.filter3dMovies,
-        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACO0lEQVQ4jWNgoCV4euep7PTNv1Lv3n0mR1DxqlWrmK/evq117e5d1du3Hylfv3tXraF7fS+H27H/BdWLF9y581jl2bNnXDgNuH37kbJz0+ZD3GXnvjHXPPrPkbbtP2vO1f+suVf/Mxc+/s9SduW/XNWJxztO3fDA6xKrtmMnGdq//xdVD/2vGbDvgVfK9kOMHr/+C+ql/Gds/fxfqObGuydPngjjNMC54+BBxtZP/7nsVv6fMOd4+YZtJ0IYPT795zJZ+p81/8R/xqYP/7fvO+iF0wCntoMHGFs+/Bd2nv7tyZMnMs+ePeNSDz5xl9n96X+29J3/GVs+/V+7eWcITgMc2w4eYGz99D89o30dTKxj0oFGFts9/5kanvznrb716cGDB5J4DWBo+/J/856TAfdevhRft/dMaEbP6tksuaf/M1T9+9+/+kgJ3kC0bTxwjLH18/9dRy+4bTt+1dOz68BO56bt+1mqHv1iiPj7v6Tz6EScmh/euqXEG3f5O0Pr5/87Dp9Fia6cmXsnM5T9+y/qff7d8+fPRbEaUNq6vY8h6d9/hrav/+cu35yKLHfh6m1txsoH/xnCf/+fMO9AIYrGx48fc+7Zc8SR3+PSJ4aSv/8Z2n/+r+lf1Hbv3j15qBLGM2fOGCkV77zHUPbvv1rUmTtHTpy1gBuwbvuxUNWkZXdVk/fcVSnbc1elbPdd1cwld12LZu9hYGBguH73rppOzpLrqsXb7qqW7b2rGrrzrpb/gutIFgwgAACAXCA9/NcOuQAAAABJRU5ErkJggg=="
-    };
-});
 bt.addSource("bB", function () {
     var bb = "https://baconbits.org/torrents.php?action=basic&searchstr={query}";
 
@@ -3307,6 +3149,164 @@ bt.addSource("TPB", function () {
 			}
         }],
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACLklEQVQ4jZWTMUiqYRSGT/04haTpEoEagYLhWgRJ+je5hmC/DtbgFoEuQmOBGIFrDbmphVKSg9AQkSC0KkI0uAjSEoS4qfjcIe5fN4t77wsvfPCd7zmc850jfNF4PP6rP0t+H56enggEAvj9fjY3N7+1qqqoqsrl5eUkoFQqISL/5GAwOAkol8t6gMFgYHp6GovFgslkQlEUFEVhamoKESEcDv8M8Hg8NJtNotEolUqF5+dnYrEYlUqFdDqNiKBp2iTg+voaEWFlZYVut4umadjtdlwuF0tLSzQaDVKpFCJCKBSaBJyfn+slzM7OTtRtNBpRFEVPMhgMfgaICHa7nZmZGUQEp9OJwWDQ75aXlz8ArVaLeDzO2dmZnmF1dZVgMMjCwgIiQjQaZX19HbPZjIjg9/sZj8eMRiPk/v4eEeHw8JBMJkM+n6darVIsFikUCuTzeXK5HFdXV5TLZW5ubuh2u5yenhKJRJCDgwOdurGxwc7ODplMhkajwXA41Jv19vZGvV4nm81ydHSExWLB5/Mht7e37O3t4fP5uLi4IJlMYrVaERGsVitra2ssLi4yPz+P1+tF0zRUVcXtduNyud6b+PLygslkwuFwoKoqoVCIWCzGyckJx8fHbG1t4Xa78Xq97O/vY7PZ2N3d5eHh4R3Q7/eZm5sjkUjQ6/W+7hcAvV6PWq3G9vY2IsLj4+PHN45GI+7u7nh9ff328Wd1Oh0CgQDtdvvPOfgffV7pXz5OoYc083dvAAAAAElFTkSuQmCC"
+    };
+});
+bt.addSource("BlueBird", function () {
+    var bird = "http://bluebird-hd.org/browse.php?incldead=1&stype=and&search={query}";
+
+    return {
+        url: {
+            all: bird,
+            movies: bird + "&c1=1&c2=1",
+            movies_1080: bird + "&c1=1&c2=1&cr3=1&cr5=1",
+            movies_720: bird + "&c1=1&c2=1&cr4=1&cr6=1",
+            movies_remux: bird + "&c1=1&c2=1&cr2=1",
+            movies_bluray: bird + "&c1=1&c2=1&cr1=1",
+            music: bird + "&cr7=1",
+            music_flac: bird + "&cr7=1",
+            tv: bird + "&c6=1",
+            mvids: bird + "&c4=1",
+            docs: bird + "&c3=1",
+            xxx: bird + "&c7=1"
+        },
+        onParse: {
+            cleanup: ["a[href*='&snatched']"],
+            row: "#highlighted > tr",
+            link_prepend: "http://bluebird-hd.org/",
+            sel: [
+                {text: "a[href*='details.php']:eq(0)"},
+                {text: "> td:eq(-3)"},
+                {text: "> td:last", link: "a[href*='download.php']:eq(0)", noblank: true}
+            ]
+        },
+        onPrepareQuery: function (context) {
+            var i,
+				len = context.url.length,
+				year = bt.extractYear(context, true);
+
+            if (year && year.length === 4) {
+                for (i = 0; i < len; i++) {
+                    context.url[i] += "&dsearch=" + year;
+                }
+            }
+
+            var res = bt.extractResolution(context);
+
+            if (res === "720p") {
+                for (i = 0; i < len; i++) {
+                    context.url[i] += "&cr4=1&cr6=1";
+                }
+            } else if (res === "1080p" || res === "1080i") {
+                for (i = 0; i < len; i++) {
+                    context.url[i] += "&cr3=1&cr5=1";
+                }
+            }
+        },
+        onFilter: bt.filter3dMovies,
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAC20lEQVQ4jY3IS0zTdwDA8Z+LO3gZiUumiS8ooqWlhE2lrDWxlocmUBSjpfpnUdSAAVFidOWPKxYw5VUKRmtbCxUwlgJFYbUKCOhkPoIv4pOoyWJ2miZbNEu223cHk2WLienhc/mI0OVRjM4z6D196NzBmOg9Ida5AvgHhxG6Y63kvPiT7Nn3ZD9/F6P3bHj1F2vbAojU6ib0E0/JiN4n43KMovfRjT/h29YOhLq8Ck3HEBpvmFTf4EfUngGS3f2oTn+g9gyg8Q6SFoiwqroBkbSjhG8afay0uVDIzSjkln8lVDWTYj9BeqOXNQ1e0ht9pNWfIsHaRHy1k5SSQ4jUwmKsF8ZZf8zJfEspC4vKWVhUzgKpjK+kMuqvTNE/+ytdM69w33qMPTrFns4Bkg/8gKJAQqRttnD04iT6ChmRtpa5WiNz0418ttrA5xmZeH9+yPmZl+xp97PL5aPU3Y1taIJSf4jEnE0IVbaJushP7D3RSc5BmXxrLQVyPdtsDeRUWAk+mKUlMoFYvAKhSEEkqNlwUMYxehvtFgmhysyl5sI4zePTdNx9Tt+z10R/ecvN3/+m98Es/hv3ONoTRixOYk5iCmLRcpR5Zhyjt9EX7kSk5m3FNjRJgd1J4mYJpbkYpbkYlWU38SYLS3LNxJsszDfk8uX6PBZkbUJqcmMbvsbqrUWIVduLsYbHMMgO5m00E5cvEZcv8UXeDuJMEnLfJfy3HtF69Q51w5PIAyNUha9ibu9EYSpEaL7bx66eYXTHT7GoooZllbUsq6xlaaWdpZV29g+OUT8xzfc/Xqeif4R9wSgFniCJRxwod5YhlCWHUJ/sJbmtB1X7uf9rO8cKZxcrnV0oW7tJdvWgdHWT1HIW9clevj5ch9AcOY42Ms2a8NQn3PiPD6eNTKNtOI1Ir3GS9eQPjDNvMD78LWZZz96hawsgvP0XyfT1YQiNYQiOxCY0hjEwhOPsef4BcnJ19Gval0YAAAAASUVORK5CYII="
+    };
+});
+bt.addSource("MoreThanTV", function () {
+    var q = "https://www.morethan.tv/ajax.php?action=browse&order_by=time&searchsubmit=1&searchstr={query}";
+
+    return {
+        url: {
+            all: q,
+            tv: q + "&filter_cat[2]=1",
+            docs: q + "&taglist=documentary"
+        },
+        onPrepareQuery: function(context){
+            var i,
+                len = context.url.length,
+                res = bt.extractResolution(context);
+
+            if (res) {
+                for (i = 0; i < len; i++) {
+                    context.url[i] += "&encoding=" + res;
+                }
+            }
+
+            var year = bt.extractYear(context);
+
+            if (year) {
+                for (i = 0; i < len; i++) {
+                    context.url[i] += "&filelist=" + year;
+                }
+            }
+        },
+        onParse: function (response) {
+            try {
+                var data = JSON.parse(response.responseText);
+            } catch (e) {
+                bt.showFailAlert(response);
+                return null;
+            }
+
+            if (!('status' in data) || data.status !== 'success' || !('response' in data) || !('results' in data.response)) {
+                bt.showFailAlert(response, "unexpected data");
+                return null;
+            }
+
+            response.context.searchUrl = response.finalUrl.replace("ajax.php?action=browse", "torrents.php?action=basic");
+
+            return data.response.results;
+        },
+        onRender: function (torrents, table) {
+            var title, rows = "";
+
+            for (var i = 0, l = torrents.length; i < l; i++) {
+                title = '<a href="https://www.morethan.tv/torrents.php?id=' + torrents[i].groupId + '&torrentid=' + torrents[i].torrentId + '" target="_blank">' + torrents[i].groupName + '</a>';
+
+                if (torrents[i].fileCount > 1) {
+                    title += ' (' + torrents[i].fileCount + ' files)';
+                }
+
+                if (torrents[i].isFreeleech) {
+                    title += ' <span class="label label-success">Freeleech</span>';
+                }
+
+                rows += '<tr><td>' + title + '</td><td>' + torrents[i].seeders + '</td><td><a href="https://www.morethan.tv/torrents.php?action=download&id=' + torrents[i].torrentId + '">' + bt.humanizeSize(torrents[i].size) + '</a></td></tr>';
+            }
+
+            table.html(rows);
+        },
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABZ0lEQVQ4jcWTu0qDYQyGA4qCDuJisV/S/m8c3HTwCgQXL6CTizg4eAAPQ1EQHAV1ETxUsF/i2FVw0UEEN2/B2c0bcPgcfv9ixVMnX3iHF5KHhBAiIroImPSAbQs4MMHmZ8egGxZ0ywWHzlhxrs42yuUBIiKyERmLIVuLgh0Luu6c1XOYbhX2gG0TbEbRBRPcu2gywbMzJmi/VBrcJeqjLuSsDy6aPOC4m762TOAumixos5MsuHHR9D8AYzRcNHUaL0RENlqZes83PwEWTfDkoimH5dPEgJpzVnfR5JzV/7xCDKgVMBN9dNF0MlQZ/hOgKHTBy4d1Wu06xuV3gFbR0CzrTHv09/wroFmqqDEaxmg0SxUtcmTd+/UK3agDcETUXyPq6QrAeuuiKYqe0UUZ45Gxmn8ZVkyw/JWj6JKxzjnjKj+pvnqoTtMuUW8M2bwJ3BnnUfTsK5voqQccO+POWK89VKeJiN4AsErg8gM6/z4AAAAASUVORK5CYII="
+    };
+});
+bt.addSource("AR", function () {
+    var ar = "https://alpharatio.cc/torrents.php?action=basic&searchstr={query}";
+
+    return {
+        url: {
+            all: ar,
+            movies: ar + "&filter_cat[6]=1&filter_cat[7]=1&filter_cat[8]=1&filter_cat[9]=1",
+            movies_1080: ar + " 1080p&filter_cat[7]=1&filter_cat[9]=1",
+            movies_720: ar + " 720p&filter_cat[7]=1&filter_cat[9]=1",
+            movies_bluray: ar + " COMPLETE&filter_cat[7]=1",
+            movies_remux: ar + " REMUX&filter_cat[7]=1",
+            docs: ar + "&filter_cat[1]=1&filter_cat[2]=1&filter_cat[3]=1&filter_cat[6]=1&filter_cat[7]=1&filter_cat[24]=1",
+            tv: ar + "&filter_cat[2]=1&filter_cat[3]=1&filter_cat[5]=1",
+            mvids: ar + "&filter_cat[11]=1",
+            elearning: ar + "&filter_cat[21]=1&filter_cat[22]=1&filter_cat[24]=1",
+            ebooks: ar + "&filter_cat[21]=1",
+            abooks: ar + "&filter_cat[22]=1",
+            games_pc: ar + "&filter_cat[12]=1",
+            apps_win: ar + "&filter_cat[16]=1",
+            music: ar + "&filter_cat[23]=1",
+            music_flac: ar + " FLAC&filter_cat[23]=1",
+            xxx: ar + "&filter_cat[10]=1&filter_cat[20]=1"
+        },
+        onParse: {
+            row: "#torrent_table tr.torrent",
+            link_prepend: "https://alpharatio.cc/",
+            sel: [
+                {text: ".group_info > a:eq(0)"},
+                {text: "> td:eq(7)"},
+                {text: "> td:eq(5)", link: "a[href*='action=download']:eq(0)", noblank: true}
+            ]
+        },
+		onFilter: bt.filter3dMovies,
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACO0lEQVQ4jWNgoCV4euep7PTNv1Lv3n0mR1DxqlWrmK/evq117e5d1du3Hylfv3tXraF7fS+H27H/BdWLF9y581jl2bNnXDgNuH37kbJz0+ZD3GXnvjHXPPrPkbbtP2vO1f+suVf/Mxc+/s9SduW/XNWJxztO3fDA6xKrtmMnGdq//xdVD/2vGbDvgVfK9kOMHr/+C+ql/Gds/fxfqObGuydPngjjNMC54+BBxtZP/7nsVv6fMOd4+YZtJ0IYPT795zJZ+p81/8R/xqYP/7fvO+iF0wCntoMHGFs+/Bd2nv7tyZMnMs+ePeNSDz5xl9n96X+29J3/GVs+/V+7eWcITgMc2w4eYGz99D89o30dTKxj0oFGFts9/5kanvznrb716cGDB5J4DWBo+/J/856TAfdevhRft/dMaEbP6tksuaf/M1T9+9+/+kgJ3kC0bTxwjLH18/9dRy+4bTt+1dOz68BO56bt+1mqHv1iiPj7v6Tz6EScmh/euqXEG3f5O0Pr5/87Dp9Fia6cmXsnM5T9+y/qff7d8+fPRbEaUNq6vY8h6d9/hrav/+cu35yKLHfh6m1txsoH/xnCf/+fMO9AIYrGx48fc+7Zc8SR3+PSJ4aSv/8Z2n/+r+lf1Hbv3j15qBLGM2fOGCkV77zHUPbvv1rUmTtHTpy1gBuwbvuxUNWkZXdVk/fcVSnbc1elbPdd1cwld12LZu9hYGBguH73rppOzpLrqsXb7qqW7b2rGrrzrpb/gutIFgwgAACAXCA9/NcOuQAAAABJRU5ErkJggg=="
     };
 });
 bt.renderPage();
