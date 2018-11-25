@@ -6,8 +6,10 @@ UserScript for multi-tracker search.
 - Save [conductorr.html](https://raw.githubusercontent.com/bnrt/conductorr/master/conductorr.html) locally and open it.
 
 Make sure local files are accessible from userscripts in your browser:
-- With GreaseMonkey for Firefox, open `about:config` and change `greasemonkey.fileIsGreaseable` to `true`. Although, Conductorr is not tested with GreaseMonkey 4+, it may not work.
-- With TamperMonkey (both Firefox and Chrome), open its settings and enable the option named like `Allow access to file URLs` or `Allow scripts to access local files`.
+- GreaseMonkey 3: open `about:config` and change `greasemonkey.fileIsGreaseable` to `true`,
+- GreaseMonkey 4: incompatible,
+- TamperMonkey: open settings and enable the option named like `Allow access to file URLs` or `Allow scripts to access local files`,
+- Violentmonkey: works out-of-the-box.
 
 ## Hints
 - To clear the page, clear the search input twice.
@@ -17,5 +19,5 @@ Make sure local files are accessible from userscripts in your browser:
 - Movies support years in queries, tv shows support resolutions.
 
 ## Known issues
-- Not compatible with the First Party Isolation mode in Firefox.
+- Incompatible with the First Party Isolation mode in Firefox.
 - Cyrillic queries don't work on BlueBird.
