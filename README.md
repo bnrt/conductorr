@@ -18,6 +18,9 @@ Make sure local files are accessible from userscripts in your browser:
 
 - Movies support years in queries, tv shows support resolutions.
 
+## Contributions
+In order to add a new provider, submit a pull request into the [src/providers/community](https://github.com/bnrt/conductorr/tree/master/src/providers/community) directory.
+
 ## Known issues
 - Incompatible with the First Party Isolation mode in Firefox.
 - Cyrillic queries don't work on BlueBird.
