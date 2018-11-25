@@ -2,7 +2,7 @@
 UserScript for multi-tracker search. 
 
 ## Installation
-- Install the userscript from [GreasyFork](https://greasyfork.org/en/scripts/12013-conductorr) or right from [here](https://github.com/bnrt/conductorr/raw/master/conductorr.user.js).
+- Install the userscript from [GreasyFork](https://greasyfork.org/en/scripts/12013-conductorr).
 - Save [conductorr.html](https://raw.githubusercontent.com/bnrt/conductorr/master/conductorr.html) locally and open it.
 
 Make sure local files are accessible from userscripts in your browser:
